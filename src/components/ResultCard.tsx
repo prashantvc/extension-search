@@ -1,17 +1,16 @@
 import { FontIcon, Image, initializeIcons, Link } from "@fluentui/react";
 import { Text } from "@fluentui/react/lib/Text";
-import { format } from "react-string-format";
 
 function ResultCard({ extension }: { extension: Extension }) {
     initializeIcons();
     return (
-        <div className="ms-Grid" dir="ltr">
+        <div className="ms-Grid">
             <div className="ms-Grid-row">
                 <div className="ms-Grid-col ms-sm2 ms-md1 ms-lg1">
                     <Image
-                        src={extension.versions[0].files[0].source}
-                        height={96}
-                        width={96}
+                        src={getImage(extension)}
+                        height={48}
+                        width={48}
                         alt="{extension.displayName}"
                     />
                 </div>
@@ -45,12 +44,20 @@ function ResultCard({ extension }: { extension: Extension }) {
             </div>
         </div>
     );
+
+    function getImage(ext: Extension) {
+        if (ext.versions[0].files.length > 0) {
+            return ext.versions[0].files[1].source;
+        }
+        return "https://cdn.vsassets.io/v/M203_20220518.4/_content/Header/default_icon_128.png";
+    }
 }
 
 export default ResultCard;
 
-class Extension {
+export class Extension {
     constructor(
+        public extensionId: string,
         public displayName: string,
         public shortDescription: string,
         public publisher: Publisher,
@@ -59,15 +66,15 @@ class Extension {
     ) {}
 }
 
-class File {
+export class File {
     constructor(public assetType: string, public source: string) {}
 }
 
-class Version {
+export class Version {
     constructor(public version: string, public files: File[]) {}
 }
 
-class Publisher {
+export class Publisher {
     constructor(
         public publisherName: string,
         public displayName: string,
@@ -76,12 +83,3 @@ class Publisher {
         public isDomainVerified: boolean
     ) {}
 }
-
-//  publisher: {
-//         publisherId: "998b010b-e2af-44a5-a6cd-0b5fd3b9b6f8",
-//         publisherName: "ms-python",
-//         displayName: "Microsoft",
-//         flags: "verified",
-//         domain: "https://microsoft.com",
-//         isDomainVerified: true,
-//     }
