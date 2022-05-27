@@ -7,22 +7,10 @@ import {
     IDocumentCardPreviewProps,
     DocumentCardPreview,
     initializeIcons,
+    IDocumentCardDetailsProps,
 } from "@fluentui/react";
 
-const previewProps: IDocumentCardPreviewProps = {
-    previewImages: [
-        {
-            name: "One",
-            linkProps: {
-                href: "http://prashantvc.com",
-                target: "_blank",
-            },
-            previewImageSrc:
-                "https://raw.githubusercontent.com/prashantvc/prashantvc.github.com/master/img/profile.jpg",
-            width: 144,
-        },
-    ],
-};
+const detailProps: IDocumentCardDetailsProps = {};
 
 function ResultCard({ extension }: { extension: Extension }) {
     initializeIcons();
@@ -31,8 +19,8 @@ function ResultCard({ extension }: { extension: Extension }) {
             type={DocumentCardType.compact}
             aria-label={extension.shortDescription}
         >
-            <DocumentCardPreview {...previewProps}/>
-            <DocumentCardDetails>
+            <DocumentCardPreview {...getCardPreview(extension)} />
+            <DocumentCardDetails {...detailProps}>
                 <DocumentCardTitle
                     title={extension.displayName}
                     shouldTruncate
@@ -52,11 +40,25 @@ function ResultCard({ extension }: { extension: Extension }) {
     );
 }
 
-function getImage(ext: Extension) {
-    if (ext.versions[0].files.length > 0) {
-        return ext.versions[0].files[1].source;
-    }
-    return "https://cdn.vsassets.io/v/M203_20220518.4/_content/Header/default_icon_128.png";
+function getCardPreview(ext: Extension): IDocumentCardPreviewProps {
+    var imageSource =
+        ext.versions[0].files.length > 0
+            ? ext.versions[0].files[0].source
+            : "https://cdn.vsassets.io/v/M203_20220518.4/_content/Header/default_icon_128.png";
+
+    return {
+        previewImages: [
+            {
+                name: "One",
+                linkProps: {
+                    href: "http://prashantvc.com",
+                    target: "_blank",
+                },
+                previewImageSrc: imageSource,
+                width: 96,
+            },
+        ],
+    };
 }
 
 export default ResultCard;
