@@ -1,56 +1,62 @@
-import { FontIcon, Image, initializeIcons, Link } from "@fluentui/react";
-import { Text } from "@fluentui/react/lib/Text";
+import {
+    DocumentCard,
+    DocumentCardActivity,
+    DocumentCardDetails,
+    DocumentCardTitle,
+    DocumentCardType,
+    IDocumentCardPreviewProps,
+    DocumentCardPreview,
+    initializeIcons,
+} from "@fluentui/react";
+
+const previewProps: IDocumentCardPreviewProps = {
+    previewImages: [
+        {
+            name: "One",
+            linkProps: {
+                href: "http://prashantvc.com",
+                target: "_blank",
+            },
+            previewImageSrc:
+                "https://raw.githubusercontent.com/prashantvc/prashantvc.github.com/master/img/profile.jpg",
+            width: 144,
+        },
+    ],
+};
 
 function ResultCard({ extension }: { extension: Extension }) {
     initializeIcons();
     return (
-        <div className="ms-Grid">
-            <div className="ms-Grid-row">
-                <div className="ms-Grid-col ms-sm2 ms-md1 ms-lg1">
-                    <Image
-                        src={getImage(extension)}
-                        height={48}
-                        width={48}
-                        alt="{extension.displayName}"
-                    />
-                </div>
-                <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg10">
-                    <Text variant="xLarge" block>
-                        {extension.displayName}
-                    </Text>
-                    <Link href={extension.publisher.domain}>
-                        <Text variant="mediumPlus">
-                            {extension.publisher.displayName}
-                        </Text>
-                        &nbsp;
-                        <FontIcon iconName="VerifiedBrandSolid" />
-                    </Link>
-                    <Text block>{extension.shortDescription}</Text>
-                </div>
-            </div>
-            <div className="ms-Grid-row">
-                <div className="ms-Grid-col">
-                    <FontIcon iconName="CloudDownload" />
-                    <Text variant="mediumPlus">
-                        {extension.statistics[0].value}
-                    </Text>
-                </div>
-                <div className="ms-Grid-col">
-                    <FontIcon iconName="FavoriteStarFill" />
-                    <Text variant="mediumPlus">
-                        {extension.statistics[1].value}
-                    </Text>
-                </div>
-            </div>
-        </div>
+        <DocumentCard
+            type={DocumentCardType.compact}
+            aria-label={extension.shortDescription}
+        >
+            <DocumentCardPreview {...previewProps}/>
+            <DocumentCardDetails>
+                <DocumentCardTitle
+                    title={extension.displayName}
+                    shouldTruncate
+                />
+                <DocumentCardActivity
+                    activity="Sent few minutes ago"
+                    people={[
+                        {
+                            name: "Prashant C",
+                            profileImageSrc: "",
+                            initials: "PC",
+                        },
+                    ]}
+                />
+            </DocumentCardDetails>
+        </DocumentCard>
     );
+}
 
-    function getImage(ext: Extension) {
-        if (ext.versions[0].files.length > 0) {
-            return ext.versions[0].files[1].source;
-        }
-        return "https://cdn.vsassets.io/v/M203_20220518.4/_content/Header/default_icon_128.png";
+function getImage(ext: Extension) {
+    if (ext.versions[0].files.length > 0) {
+        return ext.versions[0].files[1].source;
     }
+    return "https://cdn.vsassets.io/v/M203_20220518.4/_content/Header/default_icon_128.png";
 }
 
 export default ResultCard;
