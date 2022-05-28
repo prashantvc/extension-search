@@ -26,12 +26,11 @@ function ResultCard({ extension }: { extension: Extension }) {
                     shouldTruncate
                 />
                 <DocumentCardActivity
-                    activity="Sent few minutes ago"
+                    activity={`Version: ${extension.versions[0].version}`}
                     people={[
                         {
-                            name: "Prashant C",
+                            name: extension.publisher.displayName,
                             profileImageSrc: "",
-                            initials: "PC",
                         },
                     ]}
                 />
@@ -55,7 +54,10 @@ function getCardPreview(ext: Extension): IDocumentCardPreviewProps {
                     target: "_blank",
                 },
                 previewImageSrc: imageSource,
-                width: 96,
+                iconSrc: ext.publisher.isDomainVerified
+                    ? "/images/check.png"
+                    : "",
+                width: 100,
             },
         ],
     };
@@ -70,6 +72,7 @@ export class Extension {
         public shortDescription: string,
         public publisher: Publisher,
         public versions: Version[],
+        public lastUpdated: string,
         public statistics: { statisticName: string; value: number }[]
     ) {}
 }
@@ -88,6 +91,7 @@ export class Publisher {
         public displayName: string,
         public flags: string,
         public domain: string,
+
         public isDomainVerified: boolean
     ) {}
 }

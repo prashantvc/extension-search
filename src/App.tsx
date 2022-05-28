@@ -15,9 +15,9 @@ function App() {
     }
 
     return (
-        <div className="App centered">
-            <Stack>
-                <Stack className="App centered">
+        <div className="centered">
+            <Stack tokens={{ childrenGap: 20 }}>
+                <Stack>
                     <h2>Search Extensions</h2>
                     <Searchbox addResults={addResults} />
                 </Stack>

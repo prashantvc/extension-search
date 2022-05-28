@@ -1,15 +1,14 @@
-import { Stack, IStackTokens } from "@fluentui/react";
 import ResultCard, { Extension } from "./ResultCard";
-
-const stackTokens: IStackTokens = { childrenGap: 20 };
 
 function ResultList({ results }: { results: Extension[] }) {
     return (
-        <Stack tokens={stackTokens}>
+        <div style={{ overflowY: "scroll", height: "70vh" }}>
             {results.map((result: Extension) => (
-                <ResultCard key={result.extensionId} extension={result} />
+                <div style={{ padding: "4px" }}>
+                    <ResultCard key={result.extensionId} extension={result} />
+                </div>
             ))}
-        </Stack>
+        </div>
     );
 }
 
