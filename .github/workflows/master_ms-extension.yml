@@ -23,6 +23,7 @@ jobs:
 
       - name: npm install, build, and test
         run: |
+          npm install -g yarn
           yarn install
           yarn build --if-present
 
