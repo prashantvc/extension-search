@@ -1,15 +1,49 @@
-import ResultCard, { Extension } from "./ResultCard";
+import {
+    DetailsList,
+    DetailsRow,
+    IColumn,
+    IDetailsListProps,
+    SelectionMode,
+} from "@fluentui/react";
+import React from "react";
+import { ExtensionRow } from "../models/Extension";
 
-function ResultList({ results }: { results: Extension[] }) {
-    return (
-        <div style={{ overflowY: "scroll", height: "70vh" }}>
-            {results.map((result: Extension) => (
-                <div style={{ padding: "4px" }}>
-                    <ResultCard key={result.extensionId} extension={result} />
-                </div>
-            ))}
-        </div>
-    );
+export class ResultList extends React.Component<
+    { results: ExtensionRow[] },
+    {}
+> {
+    public render() {
+        return (
+            <DetailsList
+                setKey="set"
+                items={this.props.results}
+                onRenderRow={this._onRenderRow}
+                selectionMode={SelectionMode.single}
+                onRenderItemColumn={_renderItemColumn}
+            />
+        );
+    }
+
+    _onRenderRow: IDetailsListProps["onRenderRow"] = (props) => {
+        if (props) {
+            return <DetailsRow {...props} />;
+        }
+        return null;
+    };
 }
 
-export default ResultList;
+function _renderItemColumn(
+    item: ExtensionRow,
+    index?: number,
+    column?: IColumn
+) {
+    const fieldContent = item[
+        column?.fieldName as keyof ExtensionRow
+    ] as string;
+
+    if (column && column.fieldName === "icon") {
+        return <img src={fieldContent} height={24} alt="{fildContent}" />;
+    }
+
+    return <span>{fieldContent}</span>;
+}

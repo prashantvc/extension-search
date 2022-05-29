@@ -1,12 +1,12 @@
 import { initializeIcons, Stack } from "@fluentui/react";
 import { useState } from "react";
 import "./App.css";
-import { Extension } from "./components/ResultCard";
-import { MyExtension, ResultList } from "./components/MyList";
+import { ResultList } from "./components/ResultList";
 import Searchbox from "./components/Searchbox";
+import { ExtensionRow, Extension } from "./models/Extension";
 
 function App() {
-    const [results, setResults] = useState<MyExtension[]>([]);
+    const [results, setResults] = useState<ExtensionRow[]>([]);
 
     initializeIcons();
 

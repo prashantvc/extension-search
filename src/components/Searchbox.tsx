@@ -1,5 +1,5 @@
 import { initializeIcons, ISearchBoxStyles, SearchBox } from "@fluentui/react";
-import { Extension } from "./ResultCard";
+import { Extension } from "../models/Extension";
 
 const searchBoxStyles: Partial<ISearchBoxStyles> = { root: { width: 240 } };
 
