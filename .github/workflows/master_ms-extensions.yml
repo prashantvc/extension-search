@@ -23,9 +23,9 @@ jobs:
 
       - name: npm install, build, and test
         run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+          npm install -g yarn
+          yarn config set network-timeout 600000 -g
+          yarn build --if-present
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
