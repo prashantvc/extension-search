@@ -1,22 +1,21 @@
 import { initializeIcons, Stack } from "@fluentui/react";
 import { useState } from "react";
 import "./App.css";
-import { ResultList } from "./components/ResultList";
+import { IExtension, MyDetailsListComponent } from "./components/DocumentList";
 import Searchbox from "./components/Searchbox";
-import { ExtensionRow, Extension } from "./models/Extension";
+import { Extension } from "./models/Extension";
 
 function App() {
-    const [results, setResults] = useState<ExtensionRow[]>([]);
+    const [results, setResults] = useState<IExtension[]>([]);
 
     initializeIcons();
 
     function addResults(extensions: Extension[]) {
         var localResults = extensions.map((result: Extension) => ({
-            icon: getImageUrl(result),
+            key: result.extensionId,
+            iconName: getImageUrl(result),
             name: result.displayName,
-            version: result.versions[0].version,
-            publisher: result.publisher.displayName,
-            description: result.shortDescription,
+            modifiedBy: result.lastUpdated,
         }));
 
         setResults(localResults);
@@ -30,7 +29,7 @@ function App() {
                     <Searchbox addResults={addResults} />
                 </Stack>
                 <div style={{ overflowY: "scroll", height: "70vh" }}>
-                    <ResultList results={results} />
+                    <MyDetailsListComponent results={results} />
                 </div>
             </Stack>
         </div>
