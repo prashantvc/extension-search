@@ -1,12 +1,14 @@
 import { initializeIcons, ISearchBoxStyles, SearchBox } from "@fluentui/react";
+import { Dispatch, SetStateAction } from "react";
 import { Extension } from "../models/Extension";
+import { IExtension } from "./DocumentList";
 
 const searchBoxStyles: Partial<ISearchBoxStyles> = { root: { width: 240 } };
 
 function Searchbox({
     addResults,
 }: {
-    addResults: (extensions: Extension[]) => void;
+    addResults: Dispatch<SetStateAction<IExtension[]>>;
 }) {
     initializeIcons();
 
@@ -16,7 +18,14 @@ function Searchbox({
         var extensions: Extension[] = data.results[0].extensions;
         console.info(`Total results ${extensions.length}`);
 
-        addResults(extensions);
+        var localResults = extensions.map((result: Extension) => ({
+            key: result.extensionId,
+            iconName: getImageUrl(result),
+            name: result.displayName,
+            modifiedBy: result.lastUpdated,
+        }));
+
+        addResults(localResults);
     }
 
     return (
@@ -26,6 +35,15 @@ function Searchbox({
             onSearch={doSearch}
         />
     );
+}
+
+function getImageUrl(ext: Extension) {
+    var imageSource =
+        ext.versions[0].files.length > 0
+            ? ext.versions[0].files[1].source
+            : "https://cdn.vsassets.io/v/M203_20220518.4/_content/Header/default_icon_128.png";
+
+    return imageSource;
 }
 
 async function searchRequest(searchValue: string) {

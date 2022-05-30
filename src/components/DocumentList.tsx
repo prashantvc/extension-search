@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import {
     Announced,
     DetailsList,
@@ -58,10 +58,13 @@ const classNames = mergeStyleSets({
     },
 });
 export class MyDetailsListComponent extends React.Component<
-    { results: IExtension[] },
+    {
+        results: IExtension[];
+        updateResults: Dispatch<SetStateAction<IExtension[]>>;
+    },
     IDetailsListComponentState
 > {
-    constructor(props: { results: IExtension[] }) {
+    constructor(props: any) {
         super(props);
 
         initializeIcons();
@@ -147,22 +150,19 @@ export class MyDetailsListComponent extends React.Component<
         }
     }
 
-    public render() {
-        const { columns, selectionDetails, announcedMessage } = this.state;
+    public componentDidUpdate(
+        previousProps: any,
+        previousState: IDetailsListComponentState
+    ) {}
 
+    public render() {
+        const items = this.props.results;
         return (
             <div>
-                <div className={classNames.selectionDetails}>
-                    {selectionDetails}
-                </div>
-                <Announced message={selectionDetails} />
-                {announcedMessage ? (
-                    <Announced message={announcedMessage} />
-                ) : undefined}
                 <MarqueeSelection selection={this._selection}>
                     <DetailsList
-                        items={this.props.results}
-                        columns={columns}
+                        items={items}
+                        columns={this.state.columns}
                         selectionMode={SelectionMode.multiple}
                         getKey={(item: IExtension) => item.key}
                         setKey="multiple"
@@ -215,14 +215,14 @@ export class MyDetailsListComponent extends React.Component<
             ? (this._selection.getSelection() as IExtension[])
             : [this._draggedItem!];
 
-        const insertIndex = this.state.items.indexOf(item);
-        const items = this.state.items.filter(
+        const insertIndex = this.props.results.indexOf(item);
+        const items = this.props.results.filter(
             (itm) => draggedItems.indexOf(itm) === -1
         );
 
         items.splice(insertIndex, 0, ...draggedItems);
 
-        this.setState({ items });
+        this.props.updateResults(items);
     }
 
     _selection: Selection;
@@ -245,7 +245,4 @@ export interface IExtension {
     name: string;
     modifiedBy: string;
     iconName: string;
-}
-function mergeStyle(arg0: { backgroundColor: string }) {
-    throw new Error("Function not implemented.");
 }
