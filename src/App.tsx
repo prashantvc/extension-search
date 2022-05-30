@@ -4,6 +4,7 @@ import "./App.css";
 import { IExtension, MyDetailsListComponent } from "./components/DocumentList";
 import Searchbox from "./components/Searchbox";
 import { Extension } from "./models/Extension";
+import { DetailsListDragDropExample } from "./test";
 
 function App() {
     const [results, setResults] = useState<IExtension[]>([]);

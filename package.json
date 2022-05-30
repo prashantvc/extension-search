@@ -4,6 +4,7 @@
     "private": true,
     "license": "MIT",
     "dependencies": {
+        "@fluentui/example-data": "^8.4.1",
         "@fluentui/react": "^8.67.2",
         "@testing-library/jest-dom": "^5.14.1",
         "@testing-library/react": "^13.0.0",

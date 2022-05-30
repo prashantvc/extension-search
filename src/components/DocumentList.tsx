@@ -3,15 +3,23 @@ import {
     Announced,
     DetailsList,
     DetailsListLayoutMode,
+    getTheme,
     IColumn,
+    IDragDropContext,
+    IDragDropEvents,
     initializeIcons,
+    mergeStyles,
     mergeStyleSets,
     Selection,
     SelectionMode,
-    Toggle,
     TooltipHost,
 } from "@fluentui/react";
 import { MarqueeSelection } from "@fluentui/react/lib/MarqueeSelection";
+
+const theme = getTheme();
+const dragEnterClass = mergeStyles({
+    backgroundColor: theme.palette.neutralLight,
+});
 
 const classNames = mergeStyleSets({
     fileIconHeaderIcon: {
@@ -49,14 +57,6 @@ const classNames = mergeStyleSets({
         marginBottom: "20px",
     },
 });
-
-const controlStyles = {
-    root: {
-        margin: "0 30px 20px 0",
-        maxWidth: "300px",
-    },
-};
-
 export class MyDetailsListComponent extends React.Component<
     { results: IExtension[] },
     IDetailsListComponentState
@@ -73,6 +73,9 @@ export class MyDetailsListComponent extends React.Component<
                 });
             },
         });
+
+        this._dragDropEvents = this._getDragDropEvents();
+        this._draggedIndex = -1;
 
         const columns: IColumn[] = [
             {
@@ -145,8 +148,7 @@ export class MyDetailsListComponent extends React.Component<
     }
 
     public render() {
-        const { columns, items, selectionDetails, announcedMessage } =
-            this.state;
+        const { columns, selectionDetails, announcedMessage } = this.state;
 
         return (
             <div>
@@ -172,16 +174,61 @@ export class MyDetailsListComponent extends React.Component<
                             alert(`Item invoked: ${item.name}`)
                         }
                         enterModalSelectionOnTouch={true}
-                        ariaLabelForSelectionColumn="Toggle selection"
-                        ariaLabelForSelectAllCheckbox="Toggle selection for all items"
-                        checkButtonAriaLabel="select row"
+                        dragDropEvents={this._dragDropEvents}
                     />
                 </MarqueeSelection>
             </div>
         );
     }
 
+    private _getDragDropEvents(): IDragDropEvents {
+        return {
+            canDrop: (
+                dropContext?: IDragDropContext,
+                dragContext?: IDragDropContext
+            ) => true,
+            canDrag: (item?: any) => true,
+            onDrop: (item?: any, event?: DragEvent) => {
+                if (this._draggedItem) {
+                    this._insertBeforeItem(item);
+                }
+            },
+            onDragStart: (
+                item?: any,
+                itemIndex?: number,
+                selectedItems?: any[],
+                event?: MouseEvent
+            ) => {
+                this._draggedItem = item;
+                this._draggedIndex = itemIndex!;
+            },
+            onDragEnd: (item?: any, event?: DragEvent) => {
+                this._draggedItem = undefined;
+                this._draggedIndex = -1;
+            },
+            onDragEnter: (item?: any, event?: DragEvent) => dragEnterClass,
+        };
+    }
+
+    private _insertBeforeItem(item: IExtension): void {
+        const draggedItems = this._selection.isIndexSelected(this._draggedIndex)
+            ? (this._selection.getSelection() as IExtension[])
+            : [this._draggedItem!];
+
+        const insertIndex = this.state.items.indexOf(item);
+        const items = this.state.items.filter(
+            (itm) => draggedItems.indexOf(itm) === -1
+        );
+
+        items.splice(insertIndex, 0, ...draggedItems);
+
+        this.setState({ items });
+    }
+
     _selection: Selection;
+    _dragDropEvents: IDragDropEvents;
+    _draggedItem: IExtension | undefined;
+    _draggedIndex: number;
 }
 
 export interface IDetailsListComponentState {
@@ -198,4 +245,7 @@ export interface IExtension {
     name: string;
     modifiedBy: string;
     iconName: string;
+}
+function mergeStyle(arg0: { backgroundColor: string }) {
+    throw new Error("Function not implemented.");
 }
