@@ -9,13 +9,19 @@ function App() {
     initializeIcons();
 
     return (
-        <div>
+        <div className="centered">
             <Stack tokens={{ childrenGap: 20 }}>
                 <Stack className="centered">
                     <h2>Search Extensions</h2>
                     <Searchbox addResults={setResults} />
                 </Stack>
-                <div style={{ overflowY: "scroll", height: "70vh" }}>
+                <div
+                    style={{
+                        overflowY: "scroll",
+                        height: "70vh",
+                        width: "90vw",
+                    }}
+                >
                     <MyDetailsListComponent
                         results={results}
                         updateResults={setResults}

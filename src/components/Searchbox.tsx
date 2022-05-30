@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 import { Extension } from "../models/Extension";
 import { IExtension } from "./DocumentList";
 
-const searchBoxStyles: Partial<ISearchBoxStyles> = { root: { width: 240 } };
+const searchBoxStyles: Partial<ISearchBoxStyles> = { root: { width: "50vw" } };
 
 function Searchbox({
     addResults,
