@@ -224,6 +224,19 @@ export class MyDetailsListComponent extends React.Component<
                 isResizable: true,
                 data: "string",
                 isPadded: true,
+                onRender: (item: IExtension) => (
+                    <div style={{ verticalAlign: "middle" }}>
+                        {item.isVerified ? (
+                            <i
+                                className="ms-Icon ms-Icon--VerifiedBrandSolid"
+                                aria-hidden="true"
+                            />
+                        ) : (
+                            ""
+                        )}{" "}
+                        <span>{item.publisher}</span>
+                    </div>
+                ),
             },
             {
                 key: "column4",
