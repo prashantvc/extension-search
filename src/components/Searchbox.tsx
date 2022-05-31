@@ -1,7 +1,6 @@
 import { initializeIcons, ISearchBoxStyles, SearchBox } from "@fluentui/react";
 import { Dispatch, SetStateAction } from "react";
-import { Extension } from "../models/Extension";
-import { IExtension } from "./DocumentList";
+import { Extension, IExtension } from "../models/Extension";
 
 const searchBoxStyles: Partial<ISearchBoxStyles> = { root: { width: "50vw" } };
 
@@ -23,6 +22,12 @@ function Searchbox({
             iconName: getImageUrl(result),
             name: result.displayName,
             modifiedBy: result.lastUpdated,
+            version: result.versions[0].version,
+            description: result.shortDescription,
+            publisher: result.publisher.displayName,
+            isVerified: result.publisher.isDomainVerified,
+            downloads: 1000,
+            rating: 4.5,
         }));
 
         addResults(localResults);

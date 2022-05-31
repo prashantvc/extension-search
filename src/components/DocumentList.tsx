@@ -14,6 +14,8 @@ import {
     TooltipHost,
 } from "@fluentui/react";
 import { MarqueeSelection } from "@fluentui/react/lib/MarqueeSelection";
+import { IExtension } from "../models/Extension";
+import moment from "moment";
 
 const theme = getTheme();
 const dragEnterClass = mergeStyles({
@@ -47,6 +49,9 @@ const classNames = mergeStyleSets({
         display: "flex",
         flexWrap: "wrap",
     },
+    numberCell: {
+        textAlign: "right",
+    },
     exampleToggle: {
         display: "inline-block",
         marginBottom: "10px",
@@ -79,50 +84,7 @@ export class MyDetailsListComponent extends React.Component<
         this._dragDropEvents = this._getDragDropEvents();
         this._draggedIndex = -1;
 
-        const columns: IColumn[] = [
-            {
-                key: "column1",
-                name: "File Type",
-                className: classNames.fileIconCell,
-                iconClassName: classNames.fileIconHeaderIcon,
-                iconName: "Page",
-                fieldName: "name",
-                minWidth: 16,
-                maxWidth: 16,
-                //TODO: onColumnClick: this._onColumnClick,
-                isIconOnly: true,
-                onRender: (item: IExtension) => (
-                    <TooltipHost content={`${item.name} file`}>
-                        <img
-                            src={item.iconName}
-                            className={classNames.fileIconImg}
-                            alt={`${item.name} file`}
-                        />
-                    </TooltipHost>
-                ),
-            },
-            {
-                key: "column2",
-                name: "Name",
-                fieldName: "name",
-                minWidth: 210,
-                maxWidth: 350,
-                isRowHeader: true,
-                isResizable: true,
-                data: "string",
-                isPadded: true,
-            },
-            {
-                key: "column3",
-                name: "Date Modified",
-                fieldName: "modifiedBy",
-                minWidth: 70,
-                maxWidth: 90,
-                isResizable: true,
-                data: "string",
-                isPadded: true,
-            },
-        ];
+        const columns = this._getColumns();
 
         this.state = {
             items: this.props.results,
@@ -148,11 +110,6 @@ export class MyDetailsListComponent extends React.Component<
                 return `${selectionCount} items selected`;
         }
     }
-
-    public componentDidUpdate(
-        previousProps: any,
-        previousState: IDetailsListComponentState
-    ) {}
 
     public render() {
         const items = this.props.results;
@@ -224,6 +181,107 @@ export class MyDetailsListComponent extends React.Component<
         this.props.updateResults(items);
     }
 
+    _getColumns(): IColumn[] {
+        return [
+            {
+                key: "column1",
+                name: "File Type",
+                className: classNames.fileIconCell,
+                iconClassName: classNames.fileIconHeaderIcon,
+                iconName: "Page",
+                fieldName: "name",
+                minWidth: 16,
+                maxWidth: 16,
+                isIconOnly: true,
+                onRender: (item: IExtension) => (
+                    <TooltipHost content={`${item.name}`}>
+                        <img
+                            src={item.iconName}
+                            className={classNames.fileIconImg}
+                            alt={`${item.name}`}
+                        />
+                    </TooltipHost>
+                ),
+            },
+            {
+                key: "column2",
+                name: "Name",
+                fieldName: "name",
+                minWidth: 210,
+                maxWidth: 350,
+                isRowHeader: true,
+                isResizable: true,
+                data: "string",
+                isPadded: true,
+            },
+            {
+                key: "column3",
+                name: "Publisher",
+                fieldName: "publisher",
+                minWidth: 120,
+                maxWidth: 140,
+                isRowHeader: true,
+                isResizable: true,
+                data: "string",
+                isPadded: true,
+            },
+            {
+                key: "column4",
+                name: "Version",
+                fieldName: "version",
+                className: classNames.numberCell,
+                minWidth: 80,
+                maxWidth: 120,
+                isRowHeader: true,
+                isResizable: true,
+                data: "string",
+                isPadded: true,
+            },
+            {
+                key: "column5",
+                name: "Downloads",
+                fieldName: "downloads",
+                className: classNames.numberCell,
+                minWidth: 50,
+                maxWidth: 80,
+                isRowHeader: true,
+                isResizable: true,
+                data: "number",
+                isPadded: true,
+            },
+            {
+                key: "column6",
+                name: "Rating",
+                fieldName: "rating",
+                className: classNames.numberCell,
+                minWidth: 50,
+                maxWidth: 80,
+                isRowHeader: true,
+                isResizable: true,
+                data: "number",
+                isPadded: true,
+            },
+            {
+                key: "column7",
+                name: "Date Modified",
+                fieldName: "modifiedBy",
+                minWidth: 70,
+                maxWidth: 90,
+                isResizable: true,
+                data: "string",
+                isPadded: true,
+                onRender: (item: IExtension) => {
+                    var m = moment(item.modifiedBy);
+                    return (
+                        <TooltipHost content={`${m.format("MMMM DD, YYYY")}`}>
+                            <span>{moment(item.modifiedBy).fromNow()}</span>
+                        </TooltipHost>
+                    );
+                },
+            },
+        ];
+    }
+
     _selection: Selection;
     _dragDropEvents: IDragDropEvents;
     _draggedItem: IExtension | undefined;
@@ -237,11 +295,4 @@ export interface IDetailsListComponentState {
     isModalSelection?: boolean;
     isCompactMode?: boolean;
     announcedMessage?: string;
-}
-
-export interface IExtension {
-    key: string;
-    name: string;
-    modifiedBy: string;
-    iconName: string;
 }

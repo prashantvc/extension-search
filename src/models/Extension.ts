@@ -10,6 +10,18 @@ export class Extension {
     ) {}
 }
 
+export interface IExtension {
+    key: string;
+    name: string;
+    modifiedBy: string;
+    iconName: string;
+    publisher: string;
+    version: string;
+    isVerified: boolean;
+    downloads: number;
+    rating: number;
+    description: string;
+}
 export class File {
     constructor(public assetType: string, public source: string) {}
 }

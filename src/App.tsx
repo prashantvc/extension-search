@@ -1,8 +1,9 @@
 import { initializeIcons, Stack } from "@fluentui/react";
 import { useState } from "react";
 import "./App.css";
-import { IExtension, MyDetailsListComponent } from "./components/DocumentList";
+import { MyDetailsListComponent } from "./components/DocumentList";
 import Searchbox from "./components/Searchbox";
+import { IExtension } from "./models/Extension";
 
 function App() {
     const [results, setResults] = useState<IExtension[]>([]);
@@ -19,7 +20,7 @@ function App() {
                     style={{
                         overflowY: "scroll",
                         height: "70vh",
-                        width: "90vw",
+                        width: "96vw",
                     }}
                 >
                     <MyDetailsListComponent
