@@ -1,6 +1,7 @@
 import { initializeIcons, ISearchBoxStyles, SearchBox } from "@fluentui/react";
 import { Dispatch, SetStateAction } from "react";
 import { Extension, IExtension } from "../models/Extension";
+import { SearchInsights } from "./Insights";
 
 const searchBoxStyles: Partial<ISearchBoxStyles> = { root: { width: "50vw" } };
 
@@ -31,6 +32,15 @@ function Searchbox({
         }));
 
         addResults(localResults);
+
+        SearchInsights.Instance.appInsights.trackEvent({
+            name: "Search",
+            properties: {
+                searchValue: newValue,
+            },
+        });
+
+        SearchInsights.Instance.appInsights.flush();
     }
 
     return (
