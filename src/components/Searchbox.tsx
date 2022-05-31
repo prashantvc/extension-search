@@ -1,4 +1,4 @@
-import { initializeIcons, ISearchBoxStyles, SearchBox } from "@fluentui/react";
+import { ISearchBoxStyles, SearchBox } from "@fluentui/react";
 import { Dispatch, SetStateAction } from "react";
 import { Extension, IExtension } from "../models/Extension";
 import { SearchInsights } from "./Insights";
@@ -10,16 +10,15 @@ function Searchbox({
 }: {
     addResults: Dispatch<SetStateAction<IExtension[]>>;
 }) {
-    initializeIcons();
-
     async function doSearch(newValue: string) {
         if (newValue === "") return;
         var data = await searchRequest(newValue);
         var extensions: Extension[] = data.results[0].extensions;
         console.info(`Total results ${extensions.length}`);
 
-        var localResults = extensions.map((result: Extension) => ({
-            key: result.extensionId,
+        var localResults = extensions.map((result: Extension, index) => ({
+            originalIndex: index,
+            key: `${result.publisher.publisherName}.${result.extensionName}`,
             iconName: getImageUrl(result),
             name: result.displayName,
             modifiedBy: result.lastUpdated,
@@ -33,14 +32,12 @@ function Searchbox({
 
         addResults(localResults);
 
-        SearchInsights.Instance.appInsights.trackEvent({
-            name: "Search",
+        SearchInsights.Instance.trackEvent({
+            name: "search",
             properties: {
                 searchValue: newValue,
             },
         });
-
-        SearchInsights.Instance.appInsights.flush();
     }
 
     return (

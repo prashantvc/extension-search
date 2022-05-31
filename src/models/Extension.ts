@@ -1,6 +1,7 @@
 export class Extension {
     constructor(
         public extensionId: string,
+        public extensionName: string,
         public displayName: string,
         public shortDescription: string,
         public publisher: Publisher,
@@ -11,6 +12,7 @@ export class Extension {
 }
 
 export interface IExtension {
+    originalIndex: number;
     key: string;
     name: string;
     modifiedBy: string;
@@ -36,7 +38,6 @@ export class Publisher {
         public displayName: string,
         public flags: string,
         public domain: string,
-
         public isDomainVerified: boolean
     ) {}
 }

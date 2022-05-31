@@ -6,7 +6,6 @@ import {
     IColumn,
     IDragDropContext,
     IDragDropEvents,
-    initializeIcons,
     mergeStyles,
     mergeStyleSets,
     Rating,
@@ -14,9 +13,9 @@ import {
     SelectionMode,
     TooltipHost,
 } from "@fluentui/react";
-import { MarqueeSelection } from "@fluentui/react/lib/MarqueeSelection";
 import { IExtension } from "../models/Extension";
 import moment from "moment";
+import { SearchInsights } from "./Insights";
 
 const theme = getTheme();
 const dragEnterClass = mergeStyles({
@@ -72,8 +71,6 @@ export class MyDetailsListComponent extends React.Component<
     constructor(props: any) {
         super(props);
 
-        initializeIcons();
-
         this._selection = new Selection();
 
         this._dragDropEvents = this._getDragDropEvents();
@@ -94,24 +91,22 @@ export class MyDetailsListComponent extends React.Component<
         const items = this.props.results;
         return (
             <div>
-                <MarqueeSelection selection={this._selection}>
-                    <DetailsList
-                        items={items}
-                        columns={this.state.columns}
-                        selectionMode={SelectionMode.multiple}
-                        getKey={(item: IExtension) => item.key}
-                        setKey="multiple"
-                        layoutMode={DetailsListLayoutMode.justified}
-                        isHeaderVisible={true}
-                        selection={this._selection}
-                        selectionPreservedOnEmptyClick={true}
-                        onItemInvoked={(item: IExtension) =>
-                            alert(`Item invoked: ${item.name}`)
-                        }
-                        enterModalSelectionOnTouch={true}
-                        dragDropEvents={this._dragDropEvents}
-                    />
-                </MarqueeSelection>
+                <DetailsList
+                    items={items}
+                    columns={this.state.columns}
+                    selectionMode={SelectionMode.multiple}
+                    getKey={(item: IExtension) => item.key}
+                    setKey="multiple"
+                    layoutMode={DetailsListLayoutMode.justified}
+                    isHeaderVisible={true}
+                    selection={this._selection}
+                    selectionPreservedOnEmptyClick={true}
+                    onItemInvoked={(item: IExtension) =>
+                        alert(`Item invoked: ${item.name}`)
+                    }
+                    enterModalSelectionOnTouch={true}
+                    dragDropEvents={this._dragDropEvents}
+                />
             </div>
         );
     }
@@ -156,6 +151,17 @@ export class MyDetailsListComponent extends React.Component<
         );
 
         items.splice(insertIndex, 0, ...draggedItems);
+
+        draggedItems.forEach((e) => {
+            SearchInsights.Instance.trackEvent({
+                name: "result_moved",
+                properties: {
+                    extension_id: e.key,
+                    originalIndex: e.originalIndex,
+                    newIndex: items.indexOf(e),
+                },
+            });
+        });
 
         this.props.updateResults(items);
     }

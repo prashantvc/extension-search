@@ -6,14 +6,12 @@ import {
     DocumentCardType,
     IDocumentCardPreviewProps,
     DocumentCardPreview,
-    initializeIcons,
     IDocumentCardDetailsProps,
 } from "@fluentui/react";
 
 const detailProps: IDocumentCardDetailsProps = {};
 
 function ResultCard({ extension }: { extension: Extension }) {
-    initializeIcons();
     return (
         <DocumentCard
             type={DocumentCardType.compact}

@@ -1,4 +1,7 @@
-import { ApplicationInsights } from "@microsoft/applicationinsights-web";
+import {
+    ApplicationInsights,
+    IEventTelemetry,
+} from "@microsoft/applicationinsights-web";
 
 // create singleton class SearchInsights
 export class SearchInsights {
@@ -18,6 +21,10 @@ export class SearchInsights {
             instrumentationKey: "e7f7da7f-c69d-4a0d-b71b-d9b237bd98a1",
         },
     });
+
+    public trackEvent(event: IEventTelemetry) {
+        this.appInsights.trackEvent(event);
+    }
 
     public get appInsights() {
         return this._appInsights;
