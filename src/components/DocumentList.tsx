@@ -9,6 +9,7 @@ import {
     initializeIcons,
     mergeStyles,
     mergeStyleSets,
+    Rating,
     Selection,
     SelectionMode,
     TooltipHost,
@@ -73,13 +74,7 @@ export class MyDetailsListComponent extends React.Component<
 
         initializeIcons();
 
-        this._selection = new Selection({
-            onSelectionChanged: () => {
-                this.setState({
-                    selectionDetails: this._getSelectionDetails(),
-                });
-            },
-        });
+        this._selection = new Selection();
 
         this._dragDropEvents = this._getDragDropEvents();
         this._draggedIndex = -1;
@@ -89,26 +84,10 @@ export class MyDetailsListComponent extends React.Component<
         this.state = {
             items: this.props.results,
             columns: columns,
-            selectionDetails: this._getSelectionDetails(),
             isModalSelection: false,
             isCompactMode: false,
             announcedMessage: undefined,
         };
-    }
-
-    _getSelectionDetails(): string {
-        const selectionCount = this._selection.getSelectedCount();
-
-        switch (selectionCount) {
-            case 0:
-                return "No items selected";
-            case 1:
-                var selectedItem =
-                    this._selection.getSelection()[0] as IExtension;
-                return "1 item selected: " + selectedItem.name;
-            default:
-                return `${selectionCount} items selected`;
-        }
     }
 
     public render() {
@@ -249,6 +228,13 @@ export class MyDetailsListComponent extends React.Component<
                 isResizable: true,
                 data: "number",
                 isPadded: true,
+                onRender: (item: IExtension) => (
+                    <span>
+                        {Number(item.downloads)
+                            .toLocaleString("en-US")
+                            .padStart(12, " ")}
+                    </span>
+                ),
             },
             {
                 key: "column6",
@@ -261,6 +247,13 @@ export class MyDetailsListComponent extends React.Component<
                 isResizable: true,
                 data: "number",
                 isPadded: true,
+                onRender: (item: IExtension) => (
+                    <TooltipHost content={`Rating: ${item.rating.toFixed(1)}`}>
+                        <span>
+                            <Rating max={5} rating={item.rating} readOnly />
+                        </span>
+                    </TooltipHost>
+                ),
             },
             {
                 key: "column7",
@@ -292,7 +285,6 @@ export class MyDetailsListComponent extends React.Component<
 export interface IDetailsListComponentState {
     columns: IColumn[];
     items: IExtension[];
-    selectionDetails: string;
     isModalSelection?: boolean;
     isCompactMode?: boolean;
     announcedMessage?: string;
