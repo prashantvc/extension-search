@@ -239,18 +239,6 @@ export class MyDetailsListComponent extends React.Component<
                 ),
             },
             {
-                key: "column4",
-                name: "Version",
-                fieldName: "version",
-                className: classNames.numberCell,
-                minWidth: 80,
-                maxWidth: 120,
-                isRowHeader: true,
-                isResizable: true,
-                data: "string",
-                isPadded: true,
-            },
-            {
                 key: "column5",
                 name: "Downloads",
                 fieldName: "downloads",

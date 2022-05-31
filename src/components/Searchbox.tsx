@@ -26,8 +26,8 @@ function Searchbox({
             description: result.shortDescription,
             publisher: result.publisher.displayName,
             isVerified: result.publisher.isDomainVerified,
-            downloads: 1000,
-            rating: 4.5,
+            downloads: getStatisticsData(result.statistics, "install"),
+            rating: getStatisticsData(result.statistics, "weightedRating"),
         }));
 
         addResults(localResults);
@@ -49,6 +49,14 @@ function getImageUrl(ext: Extension) {
             : "https://cdn.vsassets.io/v/M203_20220518.4/_content/Header/default_icon_128.png";
 
     return imageSource;
+}
+
+function getStatisticsData(
+    stat: { statisticName: string; value: number }[],
+    name: string
+) {
+    var result = stat.find((s) => s.statisticName === name);
+    return result ? result.value : 0;
 }
 
 async function searchRequest(searchValue: string) {
