@@ -9,14 +9,17 @@ import { IExtension } from "./models/Extension";
 function App() {
     SearchInsights.Instance.appInsights.flush();
 
-    const [results, setResults] = useState<IExtension[]>([]);
+    const [searchData, setSearchData] = useState<Search>({
+        query: "",
+        results: [],
+    });
 
     return (
         <div className="centered" style={{ height: "100%" }}>
             <Stack tokens={{ childrenGap: 20 }}>
                 <Stack className="centered">
                     <h2>Search Extensions</h2>
-                    <Searchbox addResults={setResults} />
+                    <Searchbox addResults={setSearchData} />
                 </Stack>
                 <div
                     style={{
@@ -26,16 +29,25 @@ function App() {
                     }}
                 >
                     <MyDetailsListComponent
-                        results={results}
-                        updateResults={setResults}
+                        search={searchData}
+                        updateResults={setSearchData}
                     />
                 </div>
                 <Separator />
                 <TextField label="Feedback" multiline rows={3} />
-                <PrimaryButton>Submit</PrimaryButton>
+                <PrimaryButton onClick={onSubmit}>Submit</PrimaryButton>
             </Stack>
         </div>
     );
+
+    function onSubmit() {
+        console.log(searchData);
+    }
 }
 
 export default App;
+
+export interface Search {
+    query: string;
+    results: IExtension[];
+}

@@ -1,6 +1,7 @@
 import { ISearchBoxStyles, SearchBox } from "@fluentui/react";
 import { Dispatch, SetStateAction } from "react";
-import { Extension, IExtension } from "../models/Extension";
+import { Search } from "../App";
+import { Extension } from "../models/Extension";
 import { SearchInsights } from "./Insights";
 
 const searchBoxStyles: Partial<ISearchBoxStyles> = { root: { width: "50vw" } };
@@ -8,10 +9,11 @@ const searchBoxStyles: Partial<ISearchBoxStyles> = { root: { width: "50vw" } };
 function Searchbox({
     addResults,
 }: {
-    addResults: Dispatch<SetStateAction<IExtension[]>>;
+    addResults: Dispatch<SetStateAction<Search>>;
 }) {
     async function doSearch(newValue: string) {
         if (newValue === "") return;
+
         var data = await searchRequest(newValue);
         var extensions: Extension[] = data.results[0].extensions;
         console.info(`Total results ${extensions.length}`);
@@ -30,7 +32,7 @@ function Searchbox({
             rating: getStatisticsData(result.statistics, "weightedRating"),
         }));
 
-        addResults(localResults);
+        addResults({ query: newValue, results: localResults });
 
         SearchInsights.Instance.trackEvent({
             name: "search",

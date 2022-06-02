@@ -8,7 +8,6 @@ import {
     IDragDropEvents,
     mergeStyles,
     mergeStyleSets,
-    Rating,
     Selection,
     SelectionMode,
     TooltipHost,
@@ -16,6 +15,7 @@ import {
 import { IExtension } from "../models/Extension";
 import moment from "moment";
 import { SearchInsights } from "./Insights";
+import { Search } from "../App";
 
 const theme = getTheme();
 const dragEnterClass = mergeStyles({
@@ -63,8 +63,8 @@ const classNames = mergeStyleSets({
 });
 export class MyDetailsListComponent extends React.Component<
     {
-        results: IExtension[];
-        updateResults: Dispatch<SetStateAction<IExtension[]>>;
+        search: Search;
+        updateResults: Dispatch<SetStateAction<Search>>;
     },
     IDetailsListComponentState
 > {
@@ -79,7 +79,7 @@ export class MyDetailsListComponent extends React.Component<
         const columns = this._getColumns();
 
         this.state = {
-            items: this.props.results,
+            items: this.props.search.results,
             columns: columns,
             isModalSelection: false,
             isCompactMode: false,
@@ -88,7 +88,7 @@ export class MyDetailsListComponent extends React.Component<
     }
 
     public render() {
-        const items = this.props.results;
+        const items = this.props.search.results;
         return (
             <div>
                 <DetailsList
@@ -145,8 +145,8 @@ export class MyDetailsListComponent extends React.Component<
             ? (this._selection.getSelection() as IExtension[])
             : [this._draggedItem!];
 
-        const insertIndex = this.props.results.indexOf(item);
-        const items = this.props.results.filter(
+        const insertIndex = this.props.search.results.indexOf(item);
+        const items = this.props.search.results.filter(
             (itm) => draggedItems.indexOf(itm) === -1
         );
 
@@ -163,7 +163,10 @@ export class MyDetailsListComponent extends React.Component<
             });
         });
 
-        this.props.updateResults(items);
+        this.props.updateResults({
+            query: this.props.search.query,
+            results: items,
+        });
     }
 
     _getColumns(): IColumn[] {
