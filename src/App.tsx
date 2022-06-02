@@ -1,4 +1,4 @@
-import { Stack } from "@fluentui/react";
+import { PrimaryButton, Separator, Stack, TextField } from "@fluentui/react";
 import { useState } from "react";
 import "./App.css";
 import { MyDetailsListComponent } from "./components/DocumentList";
@@ -12,7 +12,7 @@ function App() {
     const [results, setResults] = useState<IExtension[]>([]);
 
     return (
-        <div className="centered">
+        <div className="centered" style={{ height: "100%" }}>
             <Stack tokens={{ childrenGap: 20 }}>
                 <Stack className="centered">
                     <h2>Search Extensions</h2>
@@ -21,7 +21,7 @@ function App() {
                 <div
                     style={{
                         overflowY: "scroll",
-                        height: "70vh",
+                        height: "65vh",
                         width: "96vw",
                     }}
                 >
@@ -30,6 +30,9 @@ function App() {
                         updateResults={setResults}
                     />
                 </div>
+                <Separator />
+                <TextField label="Feedback" multiline rows={3} />
+                <PrimaryButton>Submit</PrimaryButton>
             </Stack>
         </div>
     );

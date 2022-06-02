@@ -247,19 +247,23 @@ export class MyDetailsListComponent extends React.Component<
                 name: "Rating",
                 fieldName: "rating",
                 className: classNames.numberCell,
-                minWidth: 50,
-                maxWidth: 80,
+                minWidth: 20,
+                maxWidth: 50,
                 isRowHeader: true,
                 isResizable: true,
                 data: "number",
                 isPadded: true,
-                onRender: (item: IExtension) => (
-                    <TooltipHost content={`Rating: ${item.rating.toFixed(1)}`}>
+                onRender: (item: IExtension) => {
+                    return (
                         <span>
-                            <Rating max={5} rating={item.rating} readOnly />
+                            <i
+                                className="ms-Icon ms-Icon--FavoriteStarFill"
+                                aria-hidden="true"
+                            />{" "}
+                            {item.rating.toFixed(1)}
                         </span>
-                    </TooltipHost>
-                ),
+                    );
+                },
             },
             {
                 key: "column7",
