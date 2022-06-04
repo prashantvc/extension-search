@@ -156,6 +156,7 @@ export class MyDetailsListComponent extends React.Component<
             SearchInsights.Instance.appInsights.trackEvent({
                 name: "result_moved",
                 properties: {
+                    query: this.props.search.query,
                     extension_id: e.key,
                     originalIndex: e.originalIndex,
                     newIndex: items.indexOf(e),
