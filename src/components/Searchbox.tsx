@@ -34,7 +34,7 @@ function Searchbox({
 
         addResults({ query: newValue, results: localResults });
 
-        SearchInsights.Instance.trackEvent({
+        SearchInsights.Instance.appInsights.trackEvent({
             name: "search",
             properties: {
                 searchValue: newValue,

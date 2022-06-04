@@ -153,7 +153,7 @@ export class MyDetailsListComponent extends React.Component<
         items.splice(insertIndex, 0, ...draggedItems);
 
         draggedItems.forEach((e) => {
-            SearchInsights.Instance.trackEvent({
+            SearchInsights.Instance.appInsights.trackEvent({
                 name: "result_moved",
                 properties: {
                     extension_id: e.key,
