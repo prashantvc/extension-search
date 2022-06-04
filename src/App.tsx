@@ -1,4 +1,10 @@
-import { PrimaryButton, Separator, Stack, TextField } from "@fluentui/react";
+import {
+    PrimaryButton,
+    ProgressIndicator,
+    Separator,
+    Stack,
+    TextField,
+} from "@fluentui/react";
 import { useState } from "react";
 import "./App.css";
 import { MyDetailsListComponent } from "./components/DocumentList";
@@ -16,6 +22,7 @@ function App() {
     });
 
     const [feedBack, setFeedBack] = useState<string>("");
+    const [isSubmit, setSubmit] = useState<boolean>(false);
 
     return (
         <div className="centered" style={{ height: "100%" }}>
@@ -37,33 +44,45 @@ function App() {
                     />
                 </div>
                 <Separator />
+                {isSubmit && (
+                    <ProgressIndicator label="Submitting feedback..." />
+                )}
                 <TextField
+                    placeholder="Please provide your feedback, and reason to why you rearranged the searh results."
+                    disabled={isSubmit}
                     value={feedBack}
                     label="Feedback"
                     multiline
                     rows={3}
                     onChange={(e, nv) => setFeedBack(nv ?? "")}
                 />
-                <PrimaryButton onClick={onSubmit}>Submit</PrimaryButton>
+                <PrimaryButton disabled={isSubmit} onClick={onSubmit}>
+                    Submit
+                </PrimaryButton>
             </Stack>
         </div>
     );
 
-    function onSubmit() {
-        const items = searchData.results.map((ext: IExtension) => ({
-            key: ext.key,
-            index: searchData.results.indexOf(ext),
-            originalIndex: ext.originalIndex,
-        }));
+    async function onSubmit() {
+        try {
+            setSubmit(true);
+            const items = searchData.results.map((ext: IExtension) => ({
+                key: ext.key,
+                index: searchData.results.indexOf(ext),
+                originalIndex: ext.originalIndex,
+            }));
 
-        FeedbackService.Instance.sendFeedBack({
-            query: searchData.query,
-            items: items,
-            feedback: feedBack,
-        });
+            await FeedbackService.Instance.sendFeedBack({
+                query: searchData.query,
+                items: items,
+                feedback: feedBack,
+            });
 
-        setFeedBack("");
-        setSearchData({ query: "", results: [] });
+            setFeedBack("");
+            setSearchData({ query: "", results: [] });
+        } finally {
+            setSubmit(false);
+        }
     }
 }
 
