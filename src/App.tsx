@@ -38,6 +38,7 @@ function App() {
                 </div>
                 <Separator />
                 <TextField
+                    value={feedBack}
                     label="Feedback"
                     multiline
                     rows={3}
@@ -60,6 +61,9 @@ function App() {
             items: items,
             feedback: feedBack,
         });
+
+        setFeedBack("");
+        setSearchData({ query: "", results: [] });
     }
 }
 
