@@ -1,5 +1,9 @@
-import { ISearchBoxStyles, SearchBox } from "@fluentui/react";
-import { Dispatch, SetStateAction } from "react";
+import {
+    ISearchBoxStyles,
+    ProgressIndicator,
+    SearchBox,
+} from "@fluentui/react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Search } from "../App";
 import { Extension } from "../models/Extension";
 import { SearchInsights } from "./Insights";
@@ -11,43 +15,57 @@ function Searchbox({
 }: {
     addResults: Dispatch<SetStateAction<Search>>;
 }) {
+    const [isSearching, setIsSearching] = useState(false);
+
     async function doSearch(newValue: string) {
-        if (newValue === "") return;
+        if (newValue === "") {
+            setIsSearching(false);
+            return;
+        }
 
-        var data = await searchRequest(newValue);
-        var extensions: Extension[] = data.results[0].extensions;
-        console.info(`Total results ${extensions.length}`);
+        try {
+            setIsSearching(true);
 
-        var localResults = extensions.map((result: Extension, index) => ({
-            originalIndex: index,
-            key: `${result.publisher.publisherName}.${result.extensionName}`,
-            iconName: getImageUrl(result),
-            name: result.displayName,
-            modifiedBy: result.lastUpdated,
-            version: result.versions[0].version,
-            description: result.shortDescription,
-            publisher: result.publisher.displayName,
-            isVerified: result.publisher.isDomainVerified,
-            downloads: getStatisticsData(result.statistics, "install"),
-            rating: getStatisticsData(result.statistics, "weightedRating"),
-        }));
+            var data = await searchRequest(newValue);
+            var extensions: Extension[] = data.results[0].extensions;
+            console.info(`Total results ${extensions.length}`);
 
-        addResults({ query: newValue, results: localResults });
+            var localResults = extensions.map((result: Extension, index) => ({
+                originalIndex: index,
+                key: `${result.publisher.publisherName}.${result.extensionName}`,
+                iconName: getImageUrl(result),
+                name: result.displayName,
+                modifiedBy: result.lastUpdated,
+                version: result.versions[0].version,
+                description: result.shortDescription,
+                publisher: result.publisher.displayName,
+                isVerified: result.publisher.isDomainVerified,
+                downloads: getStatisticsData(result.statistics, "install"),
+                rating: getStatisticsData(result.statistics, "weightedRating"),
+            }));
 
-        SearchInsights.Instance.appInsights.trackEvent({
-            name: "search",
-            properties: {
-                searchValue: newValue,
-            },
-        });
+            addResults({ query: newValue, results: localResults });
+
+            SearchInsights.Instance.appInsights.trackEvent({
+                name: "search",
+                properties: {
+                    searchValue: newValue,
+                },
+            });
+        } finally {
+            setIsSearching(false);
+        }
     }
 
     return (
-        <SearchBox
-            styles={searchBoxStyles}
-            placeholder="Search an extension"
-            onSearch={doSearch}
-        />
+        <div>
+            <SearchBox
+                styles={searchBoxStyles}
+                placeholder="Search an extension"
+                onSearch={doSearch}
+            />
+            {isSearching && <ProgressIndicator />}
+        </div>
     );
 }
 
