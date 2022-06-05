@@ -25,7 +25,13 @@ function App() {
     const [isSubmit, setSubmit] = useState<boolean>(false);
 
     return (
-        <div className="centered">
+        <div
+            className="centered"
+            style={{
+                display: "flex",
+                flexWrap: "wrap",
+            }}
+        >
             <Stack tokens={{ childrenGap: 4 }}>
                 <Stack className="centered">
                     <h2>Search Extensions</h2>
@@ -33,9 +39,9 @@ function App() {
                 </Stack>
                 <div
                     style={{
-                        overflowY: "scroll",
-                        height: "65vh",
-                        width: "96vw",
+                        overflow: "auto",
+                        height: "calc(100vh - 25vh)",
+                        width: "60vw",
                     }}
                 >
                     <MyDetailsListComponent
@@ -44,7 +50,7 @@ function App() {
                     />
                 </div>
                 <Separator />
-                <Stack tokens={{ childrenGap: 2 }}>
+                <Stack>
                     {isSubmit && (
                         <ProgressIndicator label="Submitting feedback..." />
                     )}

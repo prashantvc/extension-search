@@ -197,7 +197,7 @@ export class MyDetailsListComponent extends React.Component<
                 name: "Name",
                 fieldName: "name",
                 minWidth: 210,
-                maxWidth: 350,
+                maxWidth: 240,
                 isRowHeader: true,
                 isResizable: true,
                 data: "string",
