@@ -17,6 +17,7 @@ export interface IExtension {
     name: string;
     modifiedBy: string;
     iconName: string;
+    highResImage: string;
     publisher: string;
     version: string;
     isVerified: boolean;

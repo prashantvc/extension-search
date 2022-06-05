@@ -3,9 +3,12 @@ import {
     DetailsList,
     DetailsListLayoutMode,
     getTheme,
+    HoverCard,
+    HoverCardType,
     IColumn,
     IDragDropContext,
     IDragDropEvents,
+    IPlainCardProps,
     mergeStyles,
     mergeStyleSets,
     Selection,
@@ -16,6 +19,7 @@ import { IExtension } from "../models/Extension";
 import moment from "moment";
 import { SearchInsights } from "./Insights";
 import { Search } from "../App";
+import { ExtensionCard } from "./ExtensionCard";
 
 const theme = getTheme();
 const dragEnterClass = mergeStyles({
@@ -60,7 +64,43 @@ const classNames = mergeStyleSets({
     selectionDetails: {
         marginBottom: "20px",
     },
+    itemClass: {
+        selectors: {
+            "&:hover": {
+                textDecoration: "underline",
+                cursor: "pointer",
+            },
+        },
+    },
 });
+
+const onRenderPlainCard = (item: IExtension) => {
+    return <ExtensionCard extension={item} />;
+};
+
+const onRenderItemColumn = (
+    item?: IExtension,
+    index?: number,
+    column?: IColumn
+) => {
+    const plainCardProps: IPlainCardProps = {
+        onRenderPlainCard: onRenderPlainCard,
+        renderData: item,
+    };
+    if (column!.key === "nameColumn") {
+        return (
+            <HoverCard
+                plainCardProps={plainCardProps}
+                instantOpenOnClick
+                type={HoverCardType.plain}
+            >
+                <div className={classNames.itemClass}>{item!.name}</div>
+            </HoverCard>
+        );
+    }
+    return item![column!.key as keyof IExtension];
+};
+
 export class MyDetailsListComponent extends React.Component<
     {
         search: Search;
@@ -92,6 +132,7 @@ export class MyDetailsListComponent extends React.Component<
         return (
             <div>
                 <DetailsList
+                    onRenderItemColumn={onRenderItemColumn}
                     items={items}
                     columns={this.state.columns}
                     selectionMode={SelectionMode.multiple}
@@ -193,7 +234,7 @@ export class MyDetailsListComponent extends React.Component<
                 ),
             },
             {
-                key: "column2",
+                key: "nameColumn",
                 name: "Name",
                 fieldName: "name",
                 minWidth: 210,

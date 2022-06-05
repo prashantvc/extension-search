@@ -2,94 +2,63 @@ import {
     DocumentCard,
     DocumentCardActivity,
     DocumentCardDetails,
+    DocumentCardPreview,
     DocumentCardTitle,
     DocumentCardType,
-    IDocumentCardPreviewProps,
-    DocumentCardPreview,
     IDocumentCardDetailsProps,
+    IDocumentCardPreviewProps,
 } from "@fluentui/react";
+import React from "react";
+import { IExtension } from "../models/Extension";
 
-const detailProps: IDocumentCardDetailsProps = {};
+const detailsProps: IDocumentCardDetailsProps = {};
+export class ExtensionCard extends React.Component<{
+    extension: IExtension;
+}> {
+    constructor(props: any) {
+        super(props);
+        this._extension = props.extension;
+    }
 
-function ResultCard({ extension }: { extension: Extension }) {
-    return (
-        <DocumentCard
-            type={DocumentCardType.compact}
-            aria-label={extension.shortDescription}
-        >
-            <DocumentCardPreview {...getCardPreview(extension)} />
-            <DocumentCardDetails {...detailProps}>
-                <DocumentCardTitle
-                    title={extension.displayName}
-                    shouldTruncate
-                />
-                <DocumentCardActivity
-                    activity={`Version: ${extension.versions[0].version}`}
-                    people={[
-                        {
-                            name: extension.publisher.displayName,
-                            profileImageSrc: "",
-                        },
-                    ]}
-                />
-            </DocumentCardDetails>
-        </DocumentCard>
-    );
-}
+    render() {
+        return (
+            <DocumentCard type={DocumentCardType.compact}>
+                <DocumentCardPreview
+                    {...this._getCardPreview(this._extension)}
+                ></DocumentCardPreview>
+                <DocumentCardDetails {...detailsProps}>
+                    <DocumentCardTitle
+                        title={this._extension.description}
+                        shouldTruncate
+                    />
+                    <DocumentCardActivity
+                        activity={`Version : ${this._extension.version}`}
+                        people={[
+                            {
+                                name: this._extension.publisher,
+                                profileImageSrc: this._extension.isVerified
+                                    ? "/images/verified-icon.png"
+                                    : "",
+                            },
+                        ]}
+                    ></DocumentCardActivity>
+                </DocumentCardDetails>
+            </DocumentCard>
+        );
+    }
 
-function getCardPreview(ext: Extension): IDocumentCardPreviewProps {
-    var imageSource =
-        ext.versions[0].files.length > 0
-            ? ext.versions[0].files[0].source
-            : "https://cdn.vsassets.io/v/M203_20220518.4/_content/Header/default_icon_128.png";
-
-    return {
-        previewImages: [
-            {
-                name: "One",
-                linkProps: {
-                    href: "http://prashantvc.com",
-                    target: "_blank",
+    _getCardPreview(extension: IExtension): IDocumentCardPreviewProps {
+        return {
+            previewImages: [
+                {
+                    name: extension.name,
+                    previewImageSrc: extension.highResImage,
+                    width: 100,
+                    height: 100,
                 },
-                previewImageSrc: imageSource,
-                iconSrc: ext.publisher.isDomainVerified
-                    ? "/images/check.png"
-                    : "",
-                width: 100,
-            },
-        ],
-    };
-}
+            ],
+        };
+    }
 
-export default ResultCard;
-
-export class Extension {
-    constructor(
-        public extensionId: string,
-        public displayName: string,
-        public shortDescription: string,
-        public publisher: Publisher,
-        public versions: Version[],
-        public lastUpdated: string,
-        public statistics: { statisticName: string; value: number }[]
-    ) {}
-}
-
-export class File {
-    constructor(public assetType: string, public source: string) {}
-}
-
-export class Version {
-    constructor(public version: string, public files: File[]) {}
-}
-
-export class Publisher {
-    constructor(
-        public publisherName: string,
-        public displayName: string,
-        public flags: string,
-        public domain: string,
-
-        public isDomainVerified: boolean
-    ) {}
+    _extension: IExtension;
 }

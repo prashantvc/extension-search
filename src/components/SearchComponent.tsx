@@ -49,6 +49,7 @@ export class SearchComponent extends React.Component<
                 originalIndex: index,
                 key: `${result.publisher.publisherName}.${result.extensionName}`,
                 iconName: getImageUrl(result),
+                highResImage: getImageUrl(result, true),
                 name: result.displayName,
                 modifiedBy: result.lastUpdated,
                 version: result.versions[0].version,
@@ -125,10 +126,12 @@ async function searchRequest(searchValue: string) {
     return await rsp?.json();
 }
 
-function getImageUrl(ext: Extension) {
+function getImageUrl(ext: Extension, highRes: boolean = false) {
     var imageSource =
         ext.versions[0].files.length > 0
-            ? ext.versions[0].files[1].source
+            ? highRes
+                ? ext.versions[0].files[0].source
+                : ext.versions[0].files[1].source
             : "https://cdn.vsassets.io/v/M203_20220518.4/_content/Header/default_icon_128.png";
 
     return imageSource;
