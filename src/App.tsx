@@ -25,8 +25,8 @@ function App() {
     const [isSubmit, setSubmit] = useState<boolean>(false);
 
     return (
-        <div className="centered" style={{ height: "100%" }}>
-            <Stack tokens={{ childrenGap: 20 }}>
+        <div className="centered">
+            <Stack tokens={{ childrenGap: 4 }}>
                 <Stack className="centered">
                     <h2>Search Extensions</h2>
                     <Searchbox addResults={setSearchData} />
@@ -44,21 +44,23 @@ function App() {
                     />
                 </div>
                 <Separator />
-                {isSubmit && (
-                    <ProgressIndicator label="Submitting feedback..." />
-                )}
-                <TextField
-                    placeholder="Please provide your feedback, and reason to why you rearranged the searh results."
-                    disabled={isSubmit}
-                    value={feedBack}
-                    label="Feedback"
-                    multiline
-                    rows={3}
-                    onChange={(e, nv) => setFeedBack(nv ?? "")}
-                />
-                <PrimaryButton disabled={isSubmit} onClick={onSubmit}>
-                    Submit
-                </PrimaryButton>
+                <Stack tokens={{ childrenGap: 2 }}>
+                    {isSubmit && (
+                        <ProgressIndicator label="Submitting feedback..." />
+                    )}
+                    <TextField
+                        placeholder="Please provide your feedback, and reason to why you rearranged the searh results."
+                        disabled={isSubmit}
+                        value={feedBack}
+                        label="Feedback"
+                        multiline
+                        rows={3}
+                        onChange={(e, nv) => setFeedBack(nv ?? "")}
+                    />
+                    <PrimaryButton disabled={isSubmit} onClick={onSubmit}>
+                        Submit
+                    </PrimaryButton>
+                </Stack>
             </Stack>
         </div>
     );
