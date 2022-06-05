@@ -10,7 +10,7 @@ import "./App.css";
 import { MyDetailsListComponent } from "./components/DocumentList";
 import { FeedbackService } from "./components/FeedbackService";
 import { SearchInsights } from "./components/Insights";
-import Searchbox from "./components/Searchbox";
+import { SearchComponent } from "./components/SearchComponent";
 import { IExtension } from "./models/Extension";
 
 function App() {
@@ -29,7 +29,7 @@ function App() {
             <Stack tokens={{ childrenGap: 4 }}>
                 <Stack className="centered">
                     <h2>Search Extensions</h2>
-                    <Searchbox addResults={setSearchData} />
+                    <SearchComponent onSearchComplete={setSearchData} />
                 </Stack>
                 <div
                     style={{

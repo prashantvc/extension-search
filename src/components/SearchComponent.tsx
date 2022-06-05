@@ -3,29 +3,44 @@ import {
     ProgressIndicator,
     SearchBox,
 } from "@fluentui/react";
-import { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { Search } from "../App";
 import { Extension } from "../models/Extension";
 import { SearchInsights } from "./Insights";
 
-const searchBoxStyles: Partial<ISearchBoxStyles> = { root: { width: "50vw" } };
+export class SearchComponent extends React.Component<
+    {
+        onSearchComplete: Dispatch<SetStateAction<Search>>;
+    },
+    { isSearching: boolean }
+> {
+    constructor(props: any) {
+        super(props);
+        this.state = { isSearching: false };
+    }
 
-function Searchbox({
-    addResults,
-}: {
-    addResults: Dispatch<SetStateAction<Search>>;
-}) {
-    const [isSearching, setIsSearching] = useState(false);
+    render() {
+        return (
+            <div>
+                <SearchBox
+                    styles={this._searchBoxStyles}
+                    placeholder="Search an extension"
+                    onSearch={this._doSearch}
+                />
+                {this.state.isSearching && <ProgressIndicator />}
+            </div>
+        );
+    }
 
-    async function doSearch(newValue: string) {
+    _doSearch = async (newValue: string) => {
         if (newValue === "") {
-            setIsSearching(false);
+            this.setState({ isSearching: false });
             return;
         }
+        console.log(`Searching for ${newValue}`);
 
         try {
-            setIsSearching(true);
-
+            this.setState({ isSearching: true });
             var data = await searchRequest(newValue);
             var extensions: Extension[] = data.results[0].extensions;
             console.info(`Total results ${extensions.length}`);
@@ -44,7 +59,10 @@ function Searchbox({
                 rating: getStatisticsData(result.statistics, "weightedRating"),
             }));
 
-            addResults({ query: newValue, results: localResults });
+            this.props.onSearchComplete({
+                query: newValue,
+                results: localResults,
+            });
 
             SearchInsights.Instance.appInsights.trackEvent({
                 name: "search",
@@ -53,37 +71,10 @@ function Searchbox({
                 },
             });
         } finally {
-            setIsSearching(false);
+            this.setState({ isSearching: false });
         }
-    }
-
-    return (
-        <div>
-            <SearchBox
-                styles={searchBoxStyles}
-                placeholder="Search an extension"
-                onSearch={doSearch}
-            />
-            {isSearching && <ProgressIndicator />}
-        </div>
-    );
-}
-
-function getImageUrl(ext: Extension) {
-    var imageSource =
-        ext.versions[0].files.length > 0
-            ? ext.versions[0].files[1].source
-            : "https://cdn.vsassets.io/v/M203_20220518.4/_content/Header/default_icon_128.png";
-
-    return imageSource;
-}
-
-function getStatisticsData(
-    stat: { statisticName: string; value: number }[],
-    name: string
-) {
-    var result = stat.find((s) => s.statisticName === name);
-    return result ? result.value : 0;
+    };
+    _searchBoxStyles: Partial<ISearchBoxStyles> = { root: { width: "50vw" } };
 }
 
 async function searchRequest(searchValue: string) {
@@ -134,4 +125,19 @@ async function searchRequest(searchValue: string) {
     return await rsp?.json();
 }
 
-export default Searchbox;
+function getImageUrl(ext: Extension) {
+    var imageSource =
+        ext.versions[0].files.length > 0
+            ? ext.versions[0].files[1].source
+            : "https://cdn.vsassets.io/v/M203_20220518.4/_content/Header/default_icon_128.png";
+
+    return imageSource;
+}
+
+function getStatisticsData(
+    stat: { statisticName: string; value: number }[],
+    name: string
+) {
+    var result = stat.find((s) => s.statisticName === name);
+    return result ? result.value : 0;
+}
