@@ -24,6 +24,7 @@ export interface IExtension {
     downloads: number;
     rating: number;
     description: string;
+    domain: string;
 }
 export class File {
     constructor(public assetType: string, public source: string) {}

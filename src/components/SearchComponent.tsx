@@ -47,6 +47,7 @@ export class SearchComponent extends React.Component<
 
             var localResults = extensions.map((result: Extension, index) => ({
                 originalIndex: index,
+                domain: result.publisher.domain,
                 key: `${result.publisher.publisherName}.${result.extensionName}`,
                 iconName: getImageUrl(result),
                 highResImage: getImageUrl(result, true),

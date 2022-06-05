@@ -3,15 +3,19 @@ import {
     DocumentCardActivity,
     DocumentCardDetails,
     DocumentCardPreview,
+    DocumentCardStatus,
     DocumentCardTitle,
-    DocumentCardType,
     IDocumentCardDetailsProps,
     IDocumentCardPreviewProps,
+    IDocumentCardStyles,
 } from "@fluentui/react";
 import React from "react";
 import { IExtension } from "../models/Extension";
 
 const detailsProps: IDocumentCardDetailsProps = {};
+const cardStyles: IDocumentCardStyles = {
+    root: { minWidth: 320 },
+};
 export class ExtensionCard extends React.Component<{
     extension: IExtension;
 }> {
@@ -22,23 +26,36 @@ export class ExtensionCard extends React.Component<{
 
     render() {
         return (
-            <DocumentCard type={DocumentCardType.compact}>
+            <DocumentCard
+                styles={cardStyles}
+                //onClickHref={`https://marketplace.visualstudio.com/items?itemName=${this._extension.key}`}
+            >
                 <DocumentCardPreview
                     {...this._getCardPreview(this._extension)}
-                ></DocumentCardPreview>
+                />
                 <DocumentCardDetails {...detailsProps}>
                     <DocumentCardTitle
-                        title={this._extension.description}
+                        title={this._extension.name}
                         shouldTruncate
                     />
+                    <DocumentCardTitle
+                        title={this._extension.description}
+                        showAsSecondaryTitle
+                    />
+
+                    {this._extension.isVerified && (
+                        <DocumentCardStatus
+                            statusIcon="VerifiedBrandSolid"
+                            status={`Publisher verified: ${this._extension.domain}`}
+                        />
+                    )}
+
                     <DocumentCardActivity
                         activity={`Version : ${this._extension.version}`}
                         people={[
                             {
                                 name: this._extension.publisher,
-                                profileImageSrc: this._extension.isVerified
-                                    ? "/images/verified-icon.png"
-                                    : "",
+                                profileImageSrc: "",
                             },
                         ]}
                     ></DocumentCardActivity>
@@ -53,7 +70,6 @@ export class ExtensionCard extends React.Component<{
                 {
                     name: extension.name,
                     previewImageSrc: extension.highResImage,
-                    width: 100,
                     height: 100,
                 },
             ],
