@@ -312,7 +312,7 @@ export class MyDetailsListComponent extends React.Component<
             },
             {
                 key: "column7",
-                name: "Date Modified",
+                name: "Last Updated",
                 fieldName: "modifiedBy",
                 minWidth: 70,
                 maxWidth: 90,
