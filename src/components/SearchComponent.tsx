@@ -76,7 +76,9 @@ export class SearchComponent extends React.Component<
             this.setState({ isSearching: false });
         }
     };
-    _searchBoxStyles: Partial<ISearchBoxStyles> = { root: { width: "50vw" } };
+    _searchBoxStyles: Partial<ISearchBoxStyles> = {
+        root: { minWidth: "40vw" },
+    };
 }
 
 async function searchRequest(searchValue: string) {

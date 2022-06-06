@@ -1,4 +1,5 @@
 import {
+    IStackTokens,
     PrimaryButton,
     ProgressIndicator,
     Separator,
@@ -13,6 +14,11 @@ import { SearchInsights } from "./components/Insights";
 import { SearchComponent } from "./components/SearchComponent";
 import { IExtension } from "./models/Extension";
 
+const verticalGapStackTokens: IStackTokens = {
+    childrenGap: 10,
+    padding: 10,
+};
+
 function App() {
     SearchInsights.Instance.appInsights.flush();
 
@@ -25,32 +31,31 @@ function App() {
     const [isSubmit, setSubmit] = useState<boolean>(false);
 
     return (
-        <div
-            className="centered"
-            style={{
-                display: "flex",
-                flexWrap: "wrap",
-            }}
-        >
-            <Stack tokens={{ childrenGap: 4 }}>
+        <div className="ms-Grid">
+            <div className="ms-Grid-row">
                 <Stack className="centered">
-                    <h2>Search Extensions</h2>
+                    <span className="ms-font-su ms-fontColor-themePrimary">
+                        Search Extensions
+                    </span>
                     <SearchComponent onSearchComplete={setSearchData} />
                 </Stack>
-                <div
-                    style={{
-                        overflow: "auto",
-                        height: "calc(100vh - 25vh)",
-                        width: "80vw",
-                    }}
-                >
-                    <MyDetailsListComponent
-                        search={searchData}
-                        updateResults={setSearchData}
-                    />
-                </div>
+            </div>
+            <div
+                className="ms-Grid-row"
+                style={{
+                    height: "calc(100vh - 30vh)",
+                    minWidth: "60vw",
+                    overflowY: "scroll",
+                }}
+            >
+                <MyDetailsListComponent
+                    search={searchData}
+                    updateResults={setSearchData}
+                />
+            </div>
+            <div className="ms-Grid-row">
                 <Separator />
-                <Stack>
+                <Stack tokens={verticalGapStackTokens}>
                     {isSubmit && (
                         <ProgressIndicator label="Submitting feedback..." />
                     )}
@@ -67,7 +72,7 @@ function App() {
                         Submit
                     </PrimaryButton>
                 </Stack>
-            </Stack>
+            </div>
         </div>
     );
 
