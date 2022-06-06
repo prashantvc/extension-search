@@ -43,7 +43,7 @@ function App() {
             <div
                 className="ms-Grid-row"
                 style={{
-                    height: "calc(100vh - 30vh)",
+                    height: "calc(100vh - 40vh)",
                     minWidth: "60vw",
                     overflowY: "scroll",
                 }}
