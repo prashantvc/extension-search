@@ -41,7 +41,7 @@ function App() {
                     style={{
                         overflow: "auto",
                         height: "calc(100vh - 25vh)",
-                        width: "60vw",
+                        width: "80vw",
                     }}
                 >
                     <MyDetailsListComponent

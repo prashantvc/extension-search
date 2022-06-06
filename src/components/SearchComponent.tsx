@@ -102,7 +102,7 @@ async function searchRequest(searchValue: string) {
                     direction: 2,
                     pageSize: 25,
                     pageNumber: 1,
-                    sortBy: 4,
+                    sortBy: 0,
                     sortOrder: 0,
                     pagingToken: null,
                 },
