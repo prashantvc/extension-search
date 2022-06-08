@@ -55,7 +55,7 @@ function App() {
                         <ProgressIndicator label="Submitting feedback..." />
                     )}
                     <TextField
-                        placeholder="Please provide your feedback, and reason to why you rearranged the searh results."
+                        placeholder="Please provide your feedback, and reason to why you rearranged the search results."
                         disabled={isSubmit}
                         value={feedBack}
                         label="Feedback"
