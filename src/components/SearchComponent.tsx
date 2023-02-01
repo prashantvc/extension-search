@@ -116,7 +116,7 @@ async function searchRequest(searchValue: string) {
     var rsp = null;
     try {
         rsp = await fetch(
-            "https://marketplace.visualstudio.com/_apis/public/gallery/extensionquery?api-version=7.1-preview.1",
+            "https://experiment-default-and.azurewebsites.net/_apis/public/gallery/extensionquery",
             requestOptions
         );
         if (!rsp.ok) {
